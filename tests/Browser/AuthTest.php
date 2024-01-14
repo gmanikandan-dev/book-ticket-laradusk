@@ -3,36 +3,36 @@
 namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Log;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 class AuthTest extends DuskTestCase
 {
+    use DatabaseMigrations;
     /**
-     * A Dusk test example.
+     * A Dusk test register.
      */
-    public function testExample(): void
+    public function testRegisterLogoutLogin(): void
     {
         $this->browse(function (Browser $browser) {
             //We'll test the register feature here
             $browser->visit('/')
                     ->clickLink('Register')
-                    ->value('#name', 'Samson') 
-                    ->value('#email', 'samson@test.com')
-                    ->value('#password', '00000000')
-                    ->value('#password_confirmation', '00000000')
-                    ->click('button[type="submit"]') ;
-
-            //We'll test the login feature here
-                    // ->press('Samson');
-                    // if ($browser->seeLink('Log Out')) {
-                    //     $browser->clickLink('Log Out')
-
-                    //     ->clickLink('Login')
-                    //     ->value('#email', 'samson@test.com')
-                    //     ->value('#password', '00000000')
-                    //     ->click('button[type="submit"]');
-                    // }
+                    ->value('#name', 'Admin') 
+                    ->value('#email', 'admin@test.com')
+                    ->value('#password', 'password')
+                    ->value('#password_confirmation', 'password')
+                    ->click('button[type="submit"]')
+                    ->assertSee('Welcome to your Jetstream application')
+                    ->press('Admin')
+                    ->click('@logout')
+                    ->assertSee('News')
+                    ->clickLink('Log in')
+                    ->value('#email', 'admin@test.com')
+                    ->value('#password', 'password')
+                    ->click('button[type="submit"]')
+                    ->assertSee('Welcome to your Jetstream application');
         });
     }
 }
